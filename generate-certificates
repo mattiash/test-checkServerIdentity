@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Generate ca key and pem
+openssl req -new -x509 -nodes -days 9999 -config $DIR/ca.cnf -keyout ca.key -out ca.pem
+
+# Generate server key
+openssl genrsa -out server.key 2048
+
+# Generate a certificate signing request for server.key
+openssl req -new -config server.cnf -key server.key -out server.csr
+
+# Sign the csr with the ca certificate, generating server.pem
+openssl x509 -req -extfile server.cnf -days 999 -passin "pass:password" -extensions v3_req -in server.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out server.pem
