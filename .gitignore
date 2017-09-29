@@ -4,3 +4,4 @@ ca.srl
 server.csr
 server.key
 server.pem
+node_modules
